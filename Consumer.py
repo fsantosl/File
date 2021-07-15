@@ -20,30 +20,29 @@ while 1==1:
 	for record in out['Records']:
 		print(record)
 		data = json.loads(record['Data'])
-            if (data['Customer'].isdigit()):
-                invoice = data['InvoiceNo']
-                customer = int(data['Customer'])
-                orderDate = data['InvoiceDate']
-                quantity = data['Quantity']
-                description = data['Description']
-                unitPrice = data['UnitPrice']
-                country = data['Country'].rstrip()
-                stockCode = data['StockCode']
+        invoice = data['InvoiceNo']
+        customer = int(data['Customer'])
+        orderDate = data['InvoiceDate']
+        quantity = data['Quantity']
+        description = data['Description']
+        unitPrice = data['UnitPrice']
+        country = data['Country'].rstrip()
+        stockCode = data['StockCode']
 
-                # Construct a unique sort key for this line item
-                orderID = invoice + "-" + stockCode
+        # Construct a unique sort key for this line item
+        orderID = invoice + "-" + stockCode
 
-                response = table.put_item(
-                    Item = {
-                        'CustomerID': decimal.Decimal(customer),
-                        'OrderID': orderID,
-                        'OrderDate': orderDate,
-                        'Quantity': decimal.Decimal(quantity),
-                        'UnitPrice': decimal.Decimal(unitPrice),
-                        'Description': description,
-                        'Country': country
-                    }
-                )
+        response = table.put_item(
+            Item = {
+                'CustomerID': decimal.Decimal(customer),
+                'OrderID': orderID,
+                'OrderDate': orderDate,
+                'Quantity': decimal.Decimal(quantity),
+                'UnitPrice': decimal.Decimal(unitPrice),
+                'Description': description,
+                'Country': country
+            }
+        )
 
 	shard_it = out["NextShardIterator"]
 	time.sleep(1.0)
